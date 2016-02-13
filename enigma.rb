@@ -34,5 +34,3 @@ class Enigma
     end
   end
 end
-code = Enigma.new
-code.encrypt("code this")
