@@ -1,15 +1,10 @@
 class Enigma
-  def encrypt(message, key = (1..5).map{rand(9)}, date = Time.now.strftime("%d%m%y").to_i)
+  def encrypt(message, key = (1..5).map{rand(9)}, date = Time.now)
+    key_index = 0
+    date = date.strftime("%d%m%y").to_i
     alphabet_map = build_map
     rotation = build_rotation(key)
     rotation = add_date_offsets(rotation, date)
-    rotation = reduce_rotation(rotation)
-  end
-
-  def reduce_rotation(array)
-    array.map do |i|
-      i = i % 38
-    end
   end
 
   def add_date_offsets(array, date)
