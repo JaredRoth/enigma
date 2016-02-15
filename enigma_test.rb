@@ -11,12 +11,20 @@ class EnigmaTest < Minitest::Test
   def test_build_map
     e = Enigma.new
 
-    assert_equal ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","], e.build_map
+    assert_equal ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","], e.build_cypher
   end
 
   def test_build_rotation
     e = Enigma.new
 
     assert_equal [12,23,34,45], e.build_rotation([1,2,3,4,5])
+  end
+
+  def test_encrypt
+    e = Enigma.new
+    words = "words"
+    key = [1,2,3,4,5]
+
+    assert_equal "berp ", e.encrypt(words, key, Time.now)
   end
 end

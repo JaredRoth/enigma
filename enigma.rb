@@ -1,10 +1,15 @@
 class Enigma
   def encrypt(message, key = (1..5).map{rand(9)}, date = Time.now)
-    key_index = 0
+    cypher = build_cypher
+    rotation_index = 0
     date = date.strftime("%d%m%y").to_i
-    alphabet_map = build_map
-    rotation = build_rotation(key)
-    rotation = add_date_offsets(rotation, date)
+    rotation = add_date_offsets(build_rotation(key), date)
+    message.chars.map do |char|
+      rotation_index = 0 if rotation_index == rotation.length
+      new_char = cypher[(cypher.index(char) + rotation[rotation_index]) % 39]
+      rotation_index += 1
+      new_char
+    end.join("")
   end
 
   def add_date_offsets(rotation, date)
@@ -15,7 +20,7 @@ class Enigma
     rotation
   end
 
-  def build_map
+  def build_cypher
     local_map = ("a".."z").to_a
     ("0".."9").to_a.each do |i|
       local_map << i
@@ -30,3 +35,4 @@ class Enigma
   end
 end
 e = Enigma.new
+p e.encrypt("words", [1,2,3,4,5], Time.now)
