@@ -7,12 +7,12 @@ class Enigma
     rotation = add_date_offsets(rotation, date)
   end
 
-  def add_date_offsets(array, date)
-    offsets = (date*date).to_s[-(array.length)..-1]
-    0.upto(array.length - 1) do |i|
-      array[i] += offsets[i].to_i
+  def add_date_offsets(rotation, date)
+    offsets = (date*date).to_s[-(rotation.length)..-1]
+    0.upto(rotation.length - 1) do |i|
+      rotation[i] += offsets[i].to_i
     end
-    array
+    rotation
   end
 
   def build_map
@@ -29,3 +29,4 @@ class Enigma
     end
   end
 end
+e = Enigma.new
