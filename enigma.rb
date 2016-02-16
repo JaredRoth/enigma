@@ -1,14 +1,14 @@
 class Enigma
   def encrypt(message, key = nil, date = Time.now)
-    key_map = build_key_map
+    dictionary = build_dictionary
     rotation_index = 0
     key.nil? ? key = (1..5).map{rand(9)} : key = key.chars
     date = date.strftime("%d%m%y").to_i
-    rotation = add_date_offsets(build_rotation(key), date)
+    rotation = add_date_offsets(initial_rotation(key), date)
 
     message.chars.map do |char|
       rotation_index = 0 if rotation_index == rotation.length
-      new_char = key_map[(key_map.index(char) + rotation[rotation_index]) % 39]
+      new_char = dictionary[(dictionary.index(char) + rotation[rotation_index]) % 39]
       rotation_index += 1
       new_char
     end.join("")
@@ -22,7 +22,7 @@ class Enigma
     abcd
   end
 
-  def build_key_map
+  def build_dictionary
     local_map = ("a".."z").to_a
     ("0".."9").to_a.each do |i|
       local_map << i
@@ -30,7 +30,7 @@ class Enigma
     local_map << " " << "." << ","
   end
 
-  def build_rotation(key)
+  def initial_rotation(key)
     key.each_cons(2).map do |i|
       i.join.to_i
     end
