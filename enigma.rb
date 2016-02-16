@@ -21,14 +21,6 @@ class Enigma
     abcd
   end
 
-  # def build_dictionary
-  #   local_map = ("a".."z").to_a
-  #   ("0".."9").to_a.each do |i|
-  #     local_map << i
-  #   end
-  #   local_map << " " << "." << ","
-  # end
-
   def initial_rotation(key)
     key.each_cons(2).map do |i|
       i.join.to_i
