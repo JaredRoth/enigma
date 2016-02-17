@@ -18,12 +18,12 @@ class EnigmaTest < Minitest::Test
     e = Enigma.new
     numbers = (1..5).map{rand(9)}
 
-    assert_equal [[numbers[0],numbers[1]].join.to_i, [numbers[1],numbers[2]].join.to_i, [numbers[2],numbers[3]].join.to_i, [numbers[3],numbers[4]].join.to_i], e.initial_rotation(numbers)
+    assert_equal [[numbers[0],numbers[1]].join.to_i, [numbers[1],numbers[2]].join.to_i, [numbers[2],numbers[3]].join.to_i, [numbers[3],numbers[4]].join.to_i], e.initial_rotations(numbers)
   end
 
   def test_build_rotation_with_specified_numbers
     e = Enigma.new
-    assert_equal [12,23,34,45], e.initial_rotation([1,2,3,4,5])
+    assert_equal [12,23,34,45], e.initial_rotations([1,2,3,4,5])
   end
 
   def test_encrypt_specified
@@ -42,5 +42,28 @@ class EnigmaTest < Minitest::Test
     e = Enigma.new
 
     refute_equal "words", e.encrypt("words")
+  end
+
+  def test_decrypt
+    e = Enigma.new
+
+    assert_equal "words", e.decrypt("berp ", "12345", Time.now)
+  end
+
+  def test_decrypt_high_key
+    e = Enigma.new
+
+    assert_equal "words", e.decrypt("kce4g", "99999", Time.now)
+  end
+
+  def test_encrpyt_and_decrypt
+    e = Enigma.new
+    phrase = "words"
+
+    10.times do
+      key = (1..5).map{rand(9)}.join
+      coded = e.encrypt(phrase, key, Time.now)
+      assert_equal "words", e.decrypt(coded, key, Time.now)
+    end
   end
 end

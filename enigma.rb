@@ -7,8 +7,14 @@ class Enigma
 
   def encrypt(message, key = nil, date = Time.now)
     key.nil? ? key = (1..5).map{rand(9)} : key = key.chars
-    date = date.strftime("%d%m%y").to_i
-    rotation = add_date_offsets(initial_rotation(key), date)
+    rotation = add_date_offsets(initial_rotations(key), date.strftime("%d%m%y").to_i)
+
+    rotate(message, rotation)
+  end
+
+  def decrypt(message, key, date = Time.now)
+    rotation = add_date_offsets(initial_rotations(key.chars), date.strftime("%d%m%y").to_i)
+    rotation.map! { |e| e = -e }
 
     rotate(message, rotation)
   end
@@ -21,7 +27,7 @@ class Enigma
     abcd
   end
 
-  def initial_rotation(key)
+  def initial_rotations(key)
     key.each_cons(2).map do |i|
       i.join.to_i
     end
@@ -31,7 +37,7 @@ class Enigma
     rotation_index = 0
     message.chars.map do |char|
       rotation_index = 0 if rotation_index == rotation.length
-      new_char = @dictionary[(@dictionary.index(char) + rotation[rotation_index]) % 39]
+      new_char = dictionary[(dictionary.index(char) + rotation[rotation_index]) % 39]
       rotation_index += 1
       new_char
     end.join("")
