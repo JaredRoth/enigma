@@ -1,3 +1,4 @@
+require 'date'
 class Enigma
   attr_reader :dictionary
 
@@ -5,18 +6,20 @@ class Enigma
     @dictionary = [*("a".."z"), *("0".."9"), " ", ".", ","]
   end
 
-  def encrypt(message, key = nil, date = Time.now.strftime("%d%m%y").to_i)
+  def encrypt(message, key = nil, date = Date.today)
+    date = date.strftime("%d%m%y").to_i
     key.nil? ? key = (1..5).map{rand(9)} : key = key.chars
     rotation = add_date_offsets(initial_rotations(key), date)
 
-    rotate(message, rotation)
+    rotate(message.downcase, rotation)
   end
 
-  def decrypt(message, key, date = Time.now.strftime("%d%m%y").to_i)
+  def decrypt(message, key, date = Date.today)
+    date = date.strftime("%d%m%y").to_i
     rotation = add_date_offsets(initial_rotations(key.chars), date)
     rotation.map! { |e| e = -e }
 
-    rotate(message, rotation)
+    rotate(message.downcase, rotation)
   end
 
   def add_date_offsets(abcd, date)
@@ -49,4 +52,5 @@ if __FILE__ == $0
   puts "some words"
   puts e.encrypt("some words", "12345")
   puts e.decrypt(" emqpmo3vi", "12345")
+
 end
