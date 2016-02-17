@@ -29,7 +29,7 @@ class EnigmaTest < Minitest::Test
   def test_encrypt_specified
     e = Enigma.new
 
-    assert_equal "berp ", e.encrypt("words", "12345", Time.now)
+    assert_equal "berp ", e.encrypt("words", "12345", Time.now.strftime("%d%m%y").to_i)
   end
 
   def test_encrypt_no_time
@@ -47,23 +47,22 @@ class EnigmaTest < Minitest::Test
   def test_decrypt
     e = Enigma.new
 
-    assert_equal "words", e.decrypt("berp ", "12345", Time.now)
+    assert_equal "words", e.decrypt("berp ", "12345", Time.now.strftime("%d%m%y").to_i)
   end
 
   def test_decrypt_high_key
     e = Enigma.new
 
-    assert_equal "words", e.decrypt("kce4g", "99999", Time.now)
+    assert_equal "words", e.decrypt("kce4g", "99999", Time.now.strftime("%d%m%y").to_i)
   end
 
   def test_encrpyt_and_decrypt
     e = Enigma.new
-    phrase = "words"
 
     10.times do
       key = (1..5).map{rand(9)}.join
-      coded = e.encrypt(phrase, key, Time.now)
-      assert_equal "words", e.decrypt(coded, key, Time.now)
+      coded = e.encrypt("words", key, Time.now.strftime("%d%m%y").to_i)
+      assert_equal "words", e.decrypt(coded, key, Time.now.strftime("%d%m%y").to_i)
     end
   end
 end
