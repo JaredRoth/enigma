@@ -7,7 +7,7 @@ class Enigma
   end
 
   def encrypt(message, key = nil, date = Date.today)
-    date = date.strftime("%d%m%y").to_i
+    date = format_date(date)
     key.nil? ? key = (1..5).map{rand(9)} : key = key.chars
     rotation = add_date_offsets(initial_rotations(key), date)
 
@@ -15,11 +15,20 @@ class Enigma
   end
 
   def decrypt(message, key, date = Date.today)
-    date = date.strftime("%d%m%y").to_i
+    date = format_date(date)
     rotation = add_date_offsets(initial_rotations(key.chars), date)
     rotation.map! { |e| e = -e }
 
     rotate(message.downcase, rotation)
+  end
+
+  def crack(message, date = Date.today)
+    date = format_date(date)
+
+  end
+
+  def format_date(date)
+    date.strftime("%d%m%y").to_i
   end
 
   def add_date_offsets(abcd, date)
@@ -52,5 +61,6 @@ if __FILE__ == $0
   puts "some words"
   puts e.encrypt("some words", "12345")
   puts e.decrypt(" emqpmo3vi", "12345")
+  puts e.crack(" emqpmo3vi")
 
 end

@@ -1,5 +1,5 @@
 require "minitest/autorun"
-require_relative 'enigma'
+require_relative 'lib/enigma'
 
 class EnigmaTest < Minitest::Test
   def test_add_date_offsets
@@ -66,10 +66,17 @@ class EnigmaTest < Minitest::Test
     end
   end
 
-  def test_handling_capitals
+  def test_handling_accidental_capitals
     e = Enigma.new
 
-    assert_equal "berp ", e.encrypt("words", "12345")
+    assert_equal "berp ", e.encrypt("wOrDs", "12345")
   end
 
+  def test_crack
+    e = Enigma.new
+
+    coded = e.encrypt("words ..end..", (1..5).map{rand(9)}.join)
+    assert_equal "words ..end..", e.crack(coded, Date.today)
+    assert_equal "words ..end..", e.crack(coded)
+  end
 end
