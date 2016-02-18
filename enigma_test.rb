@@ -18,18 +18,20 @@ class EnigmaTest < Minitest::Test
     e = Enigma.new
     numbers = (1..5).map{rand(9)}
 
-    assert_equal [[numbers[0],numbers[1]].join.to_i, [numbers[1],numbers[2]].join.to_i, [numbers[2],numbers[3]].join.to_i, [numbers[3],numbers[4]].join.to_i], e.initial_rotations(numbers)
+    assert_equal [[numbers[0],numbers[1]].join.to_i, [numbers[1],numbers[2]].join.to_i, [numbers[2],numbers[3]].join.to_i, [numbers[3],numbers[4]].join.to_i], e.create_rotations_from_key(numbers)
   end
 
   def test_build_rotation_with_specified_numbers
     e = Enigma.new
-    assert_equal [12,23,34,45], e.initial_rotations([1,2,3,4,5])
+    assert_equal [12,23,34,45], e.create_rotations_from_key([1,2,3,4,5])
   end
 
   def test_encrypt_specified
     e = Enigma.new
 
     assert_equal "berp ", e.encrypt("words", "12345", Date.today)
+    assert_equal "berp ", e.encrypt("words", "12345", 180216)
+    assert_equal "berp ", e.encrypt("words", "12345", "180216")
   end
 
   def test_encrypt_no_time
@@ -73,11 +75,11 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_crack
-    skip
     e = Enigma.new
 
     coded = e.encrypt("words ..end..", (1..5).map{rand(9)}.join)
-    assert_equal "words ..end..", e.crack(coded, Date.today)
-    assert_equal "words ..end..", e.crack(coded)
+    assert_equal "words ..end..", e.crack(coded, Date.today).first
+    assert_equal "words ..end..", e.crack(coded, 180216).first
+    assert_equal "words ..end..", e.crack(coded).first
   end
 end

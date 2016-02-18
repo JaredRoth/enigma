@@ -1,5 +1,6 @@
 require 'date'
 class Enigma
+  # only needed for the test
   attr_reader :dictionary
 
   def initialize
@@ -7,16 +8,13 @@ class Enigma
   end
 
   def encrypt(message, key = nil, date = Date.today)
-    key.nil? ? key = (1..5).map{rand(9)} : key = key.chars
-    date      = format_date(date)
-    rotation  = add_date_offsets(initial_rotations(key), date)
+    rotation  = add_date_offsets(create_rotations_from_key(validate_key(key)), validate_date(date))
 
     rotate(message.downcase, rotation)
   end
 
   def decrypt(message, key, date = Date.today)
-    date      = format_date(date)
-    rotation  = add_date_offsets(initial_rotations(key.chars), date)
+    rotation  = add_date_offsets(create_rotations_from_key(validate_key(key)), validate_date(date))
     rotation.map! { |e| e = -e }
 
     rotate(message.downcase, rotation)
@@ -28,12 +26,26 @@ class Enigma
     0.upto(99999) do |key|
       temp_key = key.to_s.rjust(5, "0")
       temp_message = decrypt(message, temp_key, date)
-      return temp_message if temp_message[-7..-1] == "..end.."
+      return temp_message, temp_key if temp_message[-7..-1] == "..end.."
     end
   end
 
-  def format_date(date)
-    date.strftime("%d%m%y").to_i
+  def validate_date(date)
+    if date.class == Date
+      date.strftime("%d%m%y").to_i
+    elsif date.class == String
+      date.to_i
+    elsif date.class == Fixnum
+      date.to_i
+    end
+  end
+
+  def validate_key(key)
+    if key.nil?
+      key = (1..5).map{rand(9)}
+    elsif key.class == String
+      key = key.chars
+    end
   end
 
   def add_date_offsets(abcd, date)
@@ -44,10 +56,8 @@ class Enigma
     abcd
   end
 
-  def initial_rotations(key)
-    key.each_cons(2).map do |i|
-      i.join.to_i
-    end
+  def create_rotations_from_key(key)
+    key.each_cons(2).map { |i| i.join.to_i }
   end
 
   def rotate(message, rotation)
@@ -63,16 +73,15 @@ end
 
 if __FILE__ == $0
   e = Enigma.new
-  # puts "Initial String"
-  # puts "some words ..end.."
-  # puts
-  # puts "Encrypted"
-  # puts e.encrypt("some words ..end..", "97283")
-  # puts
-  # puts "Decrypted"
-  # puts e.decrypt("eogpwwi22s4jxehox.", "97283")
-  # puts
-  # puts "Cracked"
-  # puts e.crack("eogpwwi22s4jxehox.")
-  puts e.encrypt("....", "15242")
+  puts "Initial String"
+  puts "some words ..end.."
+  puts
+  puts "Encrypted"
+  puts e.encrypt("some words ..end..", [3,7,2,8,3].join.to_s)
+  puts
+  puts "Decrypted"
+  puts e.decrypt("wogpbwi2hs4jcehoc.", "37283")
+  puts
+  puts "Cracked"
+  puts e.crack("wogpbwi2hs4jcehoc.", Date.today)
 end
