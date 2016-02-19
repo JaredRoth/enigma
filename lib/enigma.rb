@@ -67,7 +67,7 @@ class Enigma
   end
 
   def crack_source(message, key)
-    if caller[3] == "./lib/crack.rb:10:in `<main>'"
+    if caller.include? "./lib/crack.rb:10:in `<main>'"
       return message, key
     else
       return message
@@ -84,10 +84,11 @@ if __FILE__ == $0
   # puts e.encrypt("some words ..end..", "37283")
   # puts
   # puts "Decrypted"
-  # puts e.decrypt("wogpbwi2hs4jcehoc.", "37283")
+  # puts e.decrypt("9jTkwrVxUnm?J|UjJ(", "37283")
   # puts
   # puts "Cracked"
-  # puts e.crack("wogpbwi2hs4jcehoc.", Date.today)
+  # puts e.crack("9jTkwrVxUnm?J|UjJ(", Date.today)
+  # puts
 
   # p e.encrypt("words", "12345")
   # p e.encrypt("wOrDs", "12345")
@@ -100,4 +101,5 @@ if __FILE__ == $0
 
   # p e.encrypt('!@$%^&*()[],.<>;:/?', "12345")
   # p e.decrypt('?kvIcozMgsDQkwHUoAL', "12345")
+  # p "!@$%^&*()[],.<>;:/?"
 end
