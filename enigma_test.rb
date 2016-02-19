@@ -1,5 +1,5 @@
 require_relative 'lib/enigma'
-require 'minitest'
+require 'minitest/autorun'
 
 class EnigmaTest < Minitest::Test
   def test_map_gets_built_on_initialize
