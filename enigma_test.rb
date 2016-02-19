@@ -5,7 +5,7 @@ class EnigmaTest < Minitest::Test
   def test_map_gets_built_on_initialize
     e = Enigma.new
 
-    assert_equal ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","], e.dictionary
+    assert_equal ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","], e.dictionary
   end
 
   def test_add_date_offsets
@@ -36,15 +36,15 @@ class EnigmaTest < Minitest::Test
 
   def test_encrypt_with_date_specified
     e = Enigma.new
-    assert_equal "berp ", e.encrypt("words", "12345", Date.today)
-    assert_equal "berp ", e.encrypt("words", "12345", 180216)
-    assert_equal "berp ", e.encrypt("words", "12345", "180216")
+    assert_equal "OR42K", e.encrypt("words", "12345", Date.today)
+    assert_equal "OR42K", e.encrypt("words", "12345", 180216)
+    assert_equal "OR42K", e.encrypt("words", "12345", "180216")
   end
 
   def test_encrypt_without_date
     e = Enigma.new
 
-    assert_equal "berp ", e.encrypt("words", "12345")
+    assert_equal "OR42K", e.encrypt("words", "12345")
   end
 
   def test_encrypt_message_only
@@ -56,13 +56,13 @@ class EnigmaTest < Minitest::Test
   def test_decrypt
     e = Enigma.new
 
-    assert_equal "words", e.decrypt("berp ", "12345")
+    assert_equal "words", e.decrypt("OR42K", "12345")
   end
 
   def test_decrypt_high_key
     e = Enigma.new
 
-    assert_equal "words", e.decrypt("kce4g", "99999")
+    assert_equal "words", e.decrypt(" 24R6", "99999")
   end
 
   def test_encrpyt_and_decrypt_with_random_key
@@ -76,10 +76,10 @@ class EnigmaTest < Minitest::Test
     end
   end
 
-  def test_handling_accidental_capitals
+  def test_handling_capitals
     e = Enigma.new
 
-    assert_equal "berp ", e.encrypt("wOrDs", "12345")
+    assert_equal "Oe4pK", e.encrypt("wOrDs", "12345")
   end
 
   def test_crack_with_and_without_date_in_two_forms
