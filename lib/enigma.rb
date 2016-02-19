@@ -8,44 +8,35 @@ class Enigma
   end
 
   def encrypt(message, key = nil, date = Date.today)
-    rotation  = add_date_offsets(create_rotations_from_key(validate_key(key)), validate_date(date))
+    rotation  = add_date_offsets(create_rotations_from_key_array(key_to_array(key)), date_to_int(date))
 
     rotate(message.downcase, rotation)
   end
 
   def decrypt(message, key, date = Date.today)
-    rotation  = add_date_offsets(create_rotations_from_key(validate_key(key)), validate_date(date))
+    rotation  = add_date_offsets(create_rotations_from_key_array(key_to_array(key)), date_to_int(date))
     rotation.map! { |e| e = -e }
 
     rotate(message.downcase, rotation)
   end
 
   def crack(message, date = Date.today)
-    temp_message = ""
-    temp_key = 0
     0.upto(99999) do |key|
-      temp_key = key.to_s.rjust(5, "0")
-      temp_message = decrypt(message, temp_key, date)
-      return temp_message, temp_key if temp_message[-7..-1] == "..end.."
+      temp_k = key.to_s.rjust(5, "0")
+      temp_m = decrypt(message, temp_k, date)
+      # return temp_message, temp_key if temp_message[-7..-1] == "..end.."
+      return crack_source(temp_m, temp_k) if temp_m[-7..-1] == "..end.."
     end
   end
 
-  def validate_date(date)
-    if date.class == Date
-      date.strftime("%d%m%y").to_i
-    elsif date.class == String
-      date.to_i
-    elsif date.class == Fixnum
-      date.to_i
-    end
+  def rotate(message, rotation)
+    message.chars.each_with_index.map do |char, index|
+      dictionary[(dictionary.index(char) + rotation[index % 4]) % 39]
+    end.join("")
   end
 
-  def validate_key(key)
-    if key.nil?
-      key = (1..5).map{rand(9)}
-    elsif key.class == String
-      key = key.chars
-    end
+  def create_rotations_from_key_array(key)
+    key.each_cons(2).map { |i| i.join.to_i }
   end
 
   def add_date_offsets(abcd, date)
@@ -56,18 +47,32 @@ class Enigma
     abcd
   end
 
-  def create_rotations_from_key(key)
-    key.each_cons(2).map { |i| i.join.to_i }
+  def date_to_int(date)
+    if date.class == Date
+      date.strftime("%d%m%y").to_i
+    elsif date.class == String
+      date.to_i
+    elsif date.class == Fixnum
+      date.to_i
+    end
   end
 
-  def rotate(message, rotation)
-    rotation_index = 0
-    message.chars.map do |char|
-      rotation_index  = 0 if rotation_index == rotation.length
-      new_char        = dictionary[(dictionary.index(char) + rotation[rotation_index]) % 39]
-      rotation_index += 1
-      new_char
-    end.join("")
+  def key_to_array(key)
+    if key.nil?
+      key = (1..5).map{rand(9)}
+    elsif key.class == String
+      key = key.chars
+    elsif key.class == Fixnum
+      key = key.to_s.chars
+    end
+  end
+
+  def crack_source(message, key)
+    if caller[3] == "./lib/crack.rb:10:in `<main>'"
+      return message, key
+    else
+      return message
+    end
   end
 end
 
