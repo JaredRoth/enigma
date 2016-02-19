@@ -91,7 +91,6 @@ if __FILE__ == $0
 
   # p e.encrypt("words", "12345")
   # p e.encrypt("wOrDs", "12345")
-  # p e.encrypt("wOrDs)\\@*%", "12345")
   # p e.encrypt("wOrDs)@*%", "12345")
   # p e.encrypt("words", "99999")
 
