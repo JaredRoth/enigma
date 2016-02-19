@@ -86,9 +86,9 @@ class EnigmaTest < Minitest::Test
     e = Enigma.new
     coded = e.encrypt("words ..end..", (1..5).map{rand(9)}.join)
 
-    assert_equal "words ..end..", e.crack(coded, Date.today)
-    assert_equal "words ..end..", e.crack(coded, 180216)
-    assert_equal "words ..end..", e.crack(coded)
+    assert_equal "words ..end..", e.crack(coded, Date.today).first
+    assert_equal "words ..end..", e.crack(coded, 180216).first
+    assert_equal "words ..end..", e.crack(coded).first
   end
 
   def test_date_to_int_with_Date
