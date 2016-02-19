@@ -22,9 +22,13 @@ class Enigma
 
   def crack(message, date = Date.today)
     0.upto(99999) do |key|
+<<<<<<< HEAD
       temp_k = key.to_s.rjust(5, "0")
       temp_m = decrypt(message, temp_k, date)
       return crack_source(temp_m, temp_k) if temp_m[-7..-1] == "..end.."
+=======
+      return decrypt(message, key.to_s.rjust(5, "0"), date), key.to_s.rjust(5, "0")if decrypt(message, key.to_s.rjust(5, "0"), date)[-7..-1] == "..end.."
+>>>>>>> master
     end
   end
 
@@ -65,6 +69,7 @@ class Enigma
       key = key.to_s.chars
     end
   end
+<<<<<<< HEAD
 
   def crack_source(message, key)
     if caller.include? "./lib/crack.rb:10:in `<main>'"
@@ -73,6 +78,8 @@ class Enigma
       return message
     end
   end
+=======
+>>>>>>> master
 end
 
 if __FILE__ == $0
