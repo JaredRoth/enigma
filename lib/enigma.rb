@@ -24,7 +24,6 @@ class Enigma
     0.upto(99999) do |key|
       temp_k = key.to_s.rjust(5, "0")
       temp_m = decrypt(message, temp_k, date)
-      # return temp_message, temp_key if temp_message[-7..-1] == "..end.."
       return crack_source(temp_m, temp_k) if temp_m[-7..-1] == "..end.."
     end
   end
