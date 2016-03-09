@@ -4,11 +4,12 @@ class Enigma
   attr_reader :dictionary
 
   def initialize
-    @dictionary = [*("a".."z"), *("A".."Z"), *("0".."9")," ","!","@","$","%","^","&","*","(",")","[","]",",",".","<",">",";",":","/","?","|"]
+    @dictionary = [*("a".."z"), *("A".."Z"), *("0".."9")," ","!","@","$","%",
+            "^","&","*","(",")","[","]",",",".","<",">",";",":","/","?","|"]
   end
 
   def encrypt(message, key = nil, date = Date.today)
-    rotation  = add_date_offsets(create_rotations_from_key_array(key_to_array(key)), date_to_int(date))
+    rotation = create_rotation(key, date)
 
     rotate(message, rotation)
   end
@@ -30,9 +31,9 @@ class Enigma
   end
 
   def rotate(message, rotation)
-    message.chars.each_with_index.map do |char, index|
+    message.chars.map.with_index do |char, index|
       dictionary[(dictionary.index(char) + rotation[index % 4]) % 83]
-    end.join('')
+    end.join
   end
 
   def create_rotations_from_key_array(key)
@@ -68,7 +69,8 @@ class Enigma
   end
 
   def crack_source(message, key)
-    if caller.include? "./lib/crack.rb:10:in `<main>'"
+    # if caller.include? "./lib/crack.rb:10:in `<main>'"
+    if $0 == "crack.rb"
       return message, key
     else
       return message
@@ -76,31 +78,31 @@ class Enigma
   end
 end
 
-if __FILE__ == $0
+if $0 == "crack.rb"
   e = Enigma.new
-  # puts "Initial String"
-  # puts "some words ..end.."
-  # puts
-  # puts "Encrypted"
-  # puts e.encrypt("some words ..end..", "37283")
-  # puts
-  # puts "Decrypted"
-  # puts e.decrypt("9jTkwrVxUnm?J|UjJ(", "37283")
-  # puts
-  # puts "Cracked"
-  # puts e.crack("9jTkwrVxUnm?J|UjJ(", Date.today)
-  # puts
+  puts "Initial String"
+  puts "some words ..end.."
+  puts
+  puts "Encrypted"
+  puts e.encrypt("some words ..end..", "37283")
+  puts
+  puts "Decrypted"
+  puts e.decrypt("9jTkwrVxUnm?J|UjJ(", "37283")
+  puts
+  puts "Cracked"
+  puts e.crack("9jTkwrVxUnm?J|UjJ(", Date.today)
+  puts
 
-  # p e.encrypt("words", "12345")
-  # p e.encrypt("wOrDs", "12345")
-  # p e.encrypt("wOrDs)@*%", "12345")
-  # p e.encrypt("words", "99999")
+  p e.encrypt("words", "12345")
+  p e.encrypt("wOrDs", "12345")
+  p e.encrypt("wOrDs)@*%", "12345")
+  p e.encrypt("words", "99999")
 
-  
+
   # works with all except '#' and '\'
   # '#' decrypts as '\#' and '\' sometimes escapes
 
-  # p e.encrypt('!@$%^&*()[],.<>;:/?', "12345")
-  # p e.decrypt('?kvIcozMgsDQkwHUoAL', "12345")
-  # p "!@$%^&*()[],.<>;:/?"
+  p e.encrypt('!@$%^&*()[],.<>;:/?', "12345")
+  p e.decrypt('?kvIcozMgsDQkwHUoAL', "12345")
+  p "!@$%^&*()[],.<>;:/?"
 end
